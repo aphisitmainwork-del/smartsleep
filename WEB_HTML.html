@@ -17,15 +17,16 @@
     /* ============================================================
        🔥 FIREBASE CONFIG — แก้ตรงนี้ให้ตรงกับ Project ของคุณ
        ============================================================ */
-    const firebaseConfig = {
-      apiKey:            "YOUR_API_KEY",
-      authDomain:        "YOUR_PROJECT.firebaseapp.com",
-      databaseURL:       "https://YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId:         "YOUR_PROJECT_ID",
-      storageBucket:     "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId:             "YOUR_APP_ID"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyDlmt6f4qLM22DglNDmEWK2v-w7hAJ1jGc",
+  authDomain: "smartsleep-ss001.firebaseapp.com",
+  databaseURL: "https://smartsleep-ss001-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "smartsleep-ss001",
+  storageBucket: "smartsleep-ss001.firebasestorage.app",
+  messagingSenderId: "10807568230",
+  appId: "1:10807568230:web:fcabe6f9eab935f0a3caa7",
+  measurementId: "G-393J29NY7L"
+};
     /* ============================================================ */
 
     const app = initializeApp(firebaseConfig);
@@ -76,11 +77,11 @@
     }, (err) => { console.error(err); showOffline(); });
 
     /* ── History (last 20 records) ────────────────────────────── */
-    onValue(query(ref(db, "history"), orderByKey(), limitToLast(20)), (snap) => {
-      const rows = [];
-      snap.forEach(child => rows.push(child.val()));
-      renderHistory(rows.reverse());
-    });
+onValue(query(ref(db, "history"), orderByKey(), limitToLast(24)), (snap) => {
+  const data = snap.val();
+  const rows = data ? Object.values(data) : [];
+  renderHistory(rows.reverse());
+});
 
     /* ── Render ───────────────────────────────────────────────── */
     function updateDashboard(d) {
@@ -154,7 +155,7 @@
         const s   = r.sleep_score ?? 0;
         const cls = s>=80?"excellent":s>=60?"good":"poor";
         return `<tr>
-          <td>${r.date ?? "-"}</td>
+          <td>${r.date ? r.date.split("-").reverse().join("-") : "-"}</td>
           <td>${r.time ?? "-"}</td>
           <td>${r.temperature ?? "-"}°C</td>
           <td>${r.humidity ?? "-"}%</td>
@@ -688,7 +689,7 @@
 
   <!-- History Table -->
   <div class="card">
-    <div class="card__title">ประวัติการบันทึก (20 รายการล่าสุด)</div>
+    <div class="card__title">ประวัติคุณภาพการนอน 24 ชั่วโมง ล่าสุด</div>
     <div class="table-wrap">
       <table>
         <thead>
